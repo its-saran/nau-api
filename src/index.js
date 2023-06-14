@@ -9,5 +9,5 @@ app.use(bodyParser.json());
 app.use("/api/v1/", v1NaukriRouter);
 
 app.listen(PORT, () => {
-    console.log(`API is listening on port http://localhost:${PORT}/api/v1/scrape`);
+    console.log(`API is live on  https://nau-api.onrender.com/api/v1/`);
 });

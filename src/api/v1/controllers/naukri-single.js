@@ -1,4 +1,4 @@
-import config from '../../config/configuration.js';
+import config from '../config/configuration.js';
 import axios from 'axios'
 
 const platform = 'naukri'
@@ -113,7 +113,13 @@ async function naukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=1000
     }
 }
 
-export default naukri;
+export const scrapeNaukri = async(req, res) => {
+  const rawData = await naukri({jobKeyword:'developer', jobLocation:'kochi'})
+  res.send(rawData)
+  console.log(rawData)
+}
+
+
 
 
 

@@ -109,7 +109,8 @@ async function naukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=1000
         return jobData
 
     } catch (error) {
-        console.error(error);
+        // console.error(error);
+        return [{'error': error}]
     }
 }
 

@@ -7,7 +7,7 @@ const platform = 'Naukri'
 const startNaukri = async ({jobKeyword, jobLocation, experience, sortBy, maxJobs=100000}) => {  // 100000 is a placeholder
   try {
       console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Rseults: ${maxJobs}`)
-      console.log(`\nStarted Scrapping ${platform}}!`)
+      console.log(`\nStarted Scrapping ${platform}!`)
 
       const headers = config.naukri.headers
       const noOfResults = config.naukri.noOfResults

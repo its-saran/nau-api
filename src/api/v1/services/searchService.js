@@ -10,7 +10,7 @@ const platforms = ['Naukri', 'Linkedin', 'Indeed']
 const startSearch = {
   naukri: async function({jobKeyword, jobLocation}) {
     try {
-        console.log(`Started Scrapping ${platforms[0]}!`)
+        console.log(`\nStarted Scrapping ${platforms[0]}!`)
     
         const headers = config.naukri.headers
         const noOfResults = config.naukri.noOfResults
@@ -34,7 +34,7 @@ const startSearch = {
   },
   linkedin: async function({jobKeyword, jobLocation}) {
     try {
-        console.log(`Started Scrapping ${platforms[1]}`)
+        console.log(`\nStarted Scrapping ${platforms[1]}`)
 
         const headers = config.naukri.headers
 
@@ -52,7 +52,7 @@ const startSearch = {
         const totalJobs = jobCountElement.text();
         console.log('Total jobs:', totalJobs);
 
-        return parseInt(totalJobs)
+        return totalJobs
     } catch (error) {
         console.error(error);
         return error
@@ -60,7 +60,7 @@ const startSearch = {
   },
   indeed: async function({jobKeyword, jobLocation}) {
     try {
-        console.log(`Started Scrapping ${platforms[2]}`)
+        console.log(`\nStarted Scrapping ${platforms[2]}`)
         puppeteer.use(StealthPlugin());
 
         const launchOptions = config.indeed.launchOptions

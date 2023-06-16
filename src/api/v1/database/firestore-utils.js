@@ -16,7 +16,7 @@ const firestore = {
         batch.set(docRef, item); // set the data for the new document
       });
       await batch.commit(); // commit the batch write operation
-      console.log(`Added ${data.length} documents to collection "${collectionName}"`);
+      console.log(`\nAdded ${data.length} documents to collection "${collectionName}"`);
     } catch (error) {
       console.error("Error adding documents: ", error);
     }

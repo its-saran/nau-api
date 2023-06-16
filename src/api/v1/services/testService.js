@@ -1,48 +1,53 @@
 import config from '../config/configuration.js';
 import axios from 'axios'
+import utils from '../utils/utils.js';
 
 const platform = 'naukri'
 
-async function naukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=100000}) {
-    try {
-        console.log('Started Scrapping Naukri!')
+async function startNaukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=100000}, progressCallback) {  // 100000 is a placeholder
+  try {
+    console.log('Started Scrapping Naukri!')
 
-        const headers = config.naukri.headers
-        const noOfResults = config.naukri.noOfResults
-        let pageNo = 1
+    const headers = config.naukri.headers
+    const noOfResults = config.naukri.noOfResults
+    let pageNo = 1
 
-        const locationLabel = jobLocation && jobLocation.toLowerCase();
-        const keywordLabel = jobKeyword && jobKeyword.toLowerCase();
+    const locationLabel = jobLocation && jobLocation.toLowerCase();
+    const keywordLabel = jobKeyword && jobKeyword.toLowerCase();
 
-        jobLocation = jobLocation && encodeURIComponent(jobLocation.toLowerCase());
-        jobKeyword = jobKeyword && encodeURIComponent(jobKeyword.toLowerCase());
+    jobLocation = jobLocation && encodeURIComponent(jobLocation.toLowerCase());
+    jobKeyword = jobKeyword && encodeURIComponent(jobKeyword.toLowerCase());
 
-        let url
-        let cmIdType
+    let totalJobs = 100// 100 is placeholder
+    let jobData = []
 
-        url = `https://www.naukri.com/jobapi/v3/search?noOfResults=${noOfResults}&searchType=adv&pageNo=${pageNo}`
+    for(let i = 0; i <= totalJobs && jobData.length < maxJobs; i += noOfResults) {``
+      let url
+      let cmIdType
 
-        if (jobLocation && jobKeyword) {
+      if (jobData.length === totalJobs) break;
+
+      url = `https://www.naukri.com/jobapi/v3/search?noOfResults=${noOfResults}&searchType=adv&pageNo=${pageNo}`
+      if (jobLocation && jobKeyword) {
           url = url + `&urlType=search_by_key_loc&keyword=${jobKeyword}&location=${jobLocation}`
           cmIdType = 1
-        } else if (jobLocation && !jobKeyword) {
+      } else if (jobLocation && !jobKeyword) {
           url = url + `&urlType=search_by_location&searchType=adv&location=${jobLocation}`
           cmIdType = 2
-        } else if (!jobLocation && jobKeyword) {
+      } else if (!jobLocation && jobKeyword) {
           url = url + `&urlType=search_by_keyword&keyword=${jobKeyword}`
           cmIdType = 3
-        }
+      }
+      
+      experience !== undefined && (url += `&experience=${experience}`);
+      sortBy && (url += `&sort=${sortBy}`);
 
-        experience !== undefined && (url += `&experience=${experience}`);
-        sortBy && (url += `&sort=${sortBy}`);
-
-        const response = await axios.get(url, {headers});
-        const data = response.data
-        const totalJobs = data.noOfJobs
-
-        const jobDetials = data.jobDetails
-        let jobData = []
-        jobDetials.map(job => {
+      const response = await axios.get(url, {headers});
+      const data = response.data
+      totalJobs = data.noOfJobs
+      
+      const jobDetials = data.jobDetails
+      jobDetials.map(job => {
 
           const getReviewsCount = () => {
             if (typeof(job.ambitionBoxData) !== 'undefined') {
@@ -51,7 +56,6 @@ async function naukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=1000
               return ''
             }
           } 
-
           const getRatings = () => {
             if (typeof(job.ambitionBoxData) !== 'undefined') {
               return job.ambitionBoxData.AggregateRating;
@@ -103,25 +107,32 @@ async function naukri({jobKeyword, jobLocation, experience, sortBy, maxJobs=1000
               reviews, salary, experience, skills, postedDate, 
               jobUrl, jobId, groupId, companyUrl, companyId, description
           }
-          jobData.push(jobObject);
-        })
-        console.log('Scrapping Finished!')
-        return jobData
 
-    } catch (error) {
-        return [{'error': error}]
+      jobData.push(jobObject);
+      if (progressCallback) {
+        progressCallback(jobData.length, maxJobs);
+      }
+      })
+
+      pageNo++
+      await utils.waitFor(config.naukri.delay)
+      console.log(`${jobData.length}/${totalJobs} Data extracted`)
     }
+
+    if (jobData.length <= maxJobs ) {
+          console.log(`Total Items : ${jobData.length}`)
+          console.log('Scraping Naukri completed!')
+          return jobData
+    } else {
+          const newJobData = jobData.slice(0, maxJobs)
+          console.log(`Total Items : ${newJobData.length}`)
+          console.log('Scraping Naukri completed!')
+          return newJobData
+    }
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-export const scrapeNaukri = async(req, res) => {
-  const rawData = await naukri({jobKeyword:'developer', jobLocation:'kochi'})
-  res.send(rawData)
-  console.log(rawData)
-}
 
-
-
-
-
-
-
+export { startNaukri }

@@ -7,7 +7,7 @@ const platform = 'Indeed'
 
 const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
     try {
-        console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Rseults: ${maxJobs}`)
+        console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Results: ${maxJobs}`)
         puppeteer.use(StealthPlugin());
 
         const launchOptions = config.indeed.launchOptions
@@ -223,7 +223,7 @@ const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
                     const cmId = `CM-I#${jobId}`
         
                     const jobArrayItem = {
-                        cmId, cmKeyword, cmLocation, title, company, jobId, location, ratings, 
+                        platform, cmId, cmKeyword, cmLocation, jobId, title, company, location, ratings, 
                         reviews, salary, qualifications, benefits, type, 
                         status, vaccancies, responseRate,
                         reviewed, posted, url, description

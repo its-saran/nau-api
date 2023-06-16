@@ -1,4 +1,4 @@
-import firestore from '../database/firestore-utils.js'
+import utils from '../utils/utils.js';
 import { startNaukri } from "../services/naukriService.js";
 import { startIndeed } from "../services/indeedService.js";
 import { startLinkedin } from "../services/linkedinService.js";
@@ -10,15 +10,15 @@ const scrapeAll = async (req, res) => {
     const keyword = query.keyword;
     const location = query.location;
     const maxJobs = query.maxjobs;
+    const collectionName = 'rawJobs'
 
     const rawNaukri = await startNaukri({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
     const rawIndeed = await startIndeed({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
     const rawLinkedin = await startLinkedin({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
 
     const rawData = [...rawNaukri, ...rawIndeed, ...rawLinkedin];
-    const collectionName = 'rawJobs'
-    firestore.addData(collectionName, rawData);
-
+    utils.saveJSON(rawData, 'scraped-jobs.json');
+    utils.saveFirestore(collectionName, rawData);
     res.send(rawData)
   } catch (error) {
       res

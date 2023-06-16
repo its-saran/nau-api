@@ -1,5 +1,5 @@
-import firestore from '../database/firestore-utils.js'
 import { startLinkedin } from "../services/linkedinService.js";
+import utils from '../utils/utils.js';
 
 const scrapeLinkedin = async (req, res) => {
   try {
@@ -8,10 +8,11 @@ const scrapeLinkedin = async (req, res) => {
       const keyword = query.keyword;
       const location = query.location;
       const maxJobs = query.maxjobs;
+      const collectionName = 'rawJobs'
 
       const rawData = await startLinkedin({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
-      const collectionName = 'rawJobs'
-      firestore.addData(collectionName, rawData);
+      utils.saveJSON(rawData, 'linkedin-jobs.json');
+      utils.saveFirestore(collectionName, rawData);
       res.send(rawData)
   } catch (error) {
       res

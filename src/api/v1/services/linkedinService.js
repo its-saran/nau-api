@@ -7,7 +7,7 @@ const platform = 'Linkedin'
 
 const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Linkedin will stop working after listing 970 jobs
   try {
-      console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Rseults: ${maxJobs}`)
+      console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Results: ${maxJobs}`)
       puppeteer.use(StealthPlugin());
 
       const launchOptions = config.linkedin.launchOptions
@@ -182,7 +182,7 @@ const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Li
 
 
             const jobArrayItem = {
-                cmId, cmKeyword, cmLocation, title, jobId, company, location, salary,
+                platform, cmId, cmKeyword, cmLocation, jobId, title, company, location, salary,
                 posted, status, applicants, seniority, 
                 type, functions, industries, url, description
             }

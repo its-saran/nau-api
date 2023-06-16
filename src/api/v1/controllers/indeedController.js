@@ -2,7 +2,12 @@ import { startIndeed } from "../services/indeedService.js";
 
 const scrapeIndeed = async (req, res) => {
   try {
-      const rawData = await startIndeed({jobKeyword:'Data Analytics', jobLocation:'kochi'})
+      const query = req.query;
+
+      const keyword = query.keyword;
+      const location = query.location;
+
+      const rawData = await startIndeed({jobKeyword:keyword, jobLocation:location})
       res.send(rawData)
   } catch (error) {
       res

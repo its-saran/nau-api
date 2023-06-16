@@ -24,7 +24,7 @@ async function startLinkedin({jobKeyword, jobLocation}) {
       const jobCountText = jobCountElement.text();
       console.log('Job count:', jobCountText);
 
-      return html;
+      return {'Job count': jobCountText};
   } catch (error) {
       console.error(error);
       return error

@@ -3,7 +3,6 @@ import {scrapeNaukri} from "../controllers/naukriController.js";
 import {scrapeLinkedin} from "../controllers/linkedinController.js";
 import {scrapeIndeed} from "../controllers/indeedController.js";
 import {totalSearch} from "../controllers/searchContoller.js";
-// import { scrapeNaukri } from "../controllers/testController.js";
 
 const router = express.Router();
 

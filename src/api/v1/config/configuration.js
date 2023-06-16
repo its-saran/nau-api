@@ -14,7 +14,7 @@ const config = {
   },
   indeed: {
       launchOptions: { 
-        headless:false,
+        headless:'new',
         slowMo:0,
         args:['--start-maximized', '--disable-infobars', '--no-first-run', '--disable-extensions']
       },
@@ -28,7 +28,7 @@ const config = {
   },
   linkedin: {
       launchOptions: { 
-        headless:false,
+        headless:'new',
         slowMo:0,
         args:['--start-maximized', '--disable-infobars', '--no-first-run', '--disable-extensions']
       },

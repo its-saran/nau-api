@@ -7,12 +7,15 @@ const platform = 'Indeed'
 
 const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
     try {
-        console.log(jobKeyword, jobLocation, maxJobs)
+        console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Rseults: ${maxJobs}`)
         puppeteer.use(StealthPlugin());
 
         const launchOptions = config.indeed.launchOptions
         const userAgent = config.indeed.userAgent
         const viewportSize = config.indeed.viewportSize
+
+        const cmKeyword = jobKeyword.toLowerCase()
+        const cmLocation = jobLocation.toLowerCase()
         
         jobKeyword = encodeURIComponent(jobKeyword.toLowerCase())
         jobLocation =  encodeURIComponent(jobLocation.toLowerCase())
@@ -23,9 +26,9 @@ const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
         await page.setUserAgent(userAgent);
         await page.setViewport(viewportSize); 
 
-        console.log('Browser loaded successfully!')
+        console.log('\nBrowser loaded successfully!')
 
-        console.log('Started Scrapping Indeed!')
+        console.log(`Started Scrapping ${platform}!`)
         let jobs = []
         
         try {
@@ -63,6 +66,11 @@ const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
                     const title = await job.$eval('.jcs-JobTitle', el => el.textContent.trim());
                     const jobLink = await job.$eval('.jcs-JobTitle', el => el.getAttribute('href').trim())
                     const url = `https://in.indeed.com${jobLink}`
+                    const urlObject = new URL(url);
+                    let jobId = urlObject.searchParams.get("jk");
+                    if (jobId==null) {
+                        jobId = urlObject.searchParams.get("fccid");
+                    }
         
                     const company = await job.$eval('.companyName', el => el.textContent.trim());
                     const location = await job.$eval('.companyLocation', el => el.textContent.trim());
@@ -211,9 +219,11 @@ const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
                     } catch (error) {
                         description = ''
                     }
+
+                    const cmId = `CM-I#${jobId}`
         
                     const jobArrayItem = {
-                        platform, title, company, location, ratings, 
+                        cmId, cmKeyword, cmLocation, title, company, jobId, location, ratings, 
                         reviews, salary, qualifications, benefits, type, 
                         status, vaccancies, responseRate,
                         reviewed, posted, url, description
@@ -245,12 +255,12 @@ const startIndeed = async ({jobKeyword, jobLocation, maxJobs = 100000}) => {
     
         if (jobs.length <= maxJobs ) {
             console.log(`Total jobs scraped : ${jobs.length}`)
-            console.log('Scraping Indeed completed!')
+            console.log(`Scraping ${platform} completed!`)
             return jobs
         } else {
             const newJobs = jobs.slice(0, maxJobs)
             console.log(`Total Items : ${newJobs.length}`)
-            console.log('Scraping Naukri completed!')
+            console.log(`Scraping ${platform} completed!`)
             return newJobs
         }
     } catch (error) {

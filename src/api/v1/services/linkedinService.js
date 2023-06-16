@@ -7,12 +7,15 @@ const platform = 'Linkedin'
 
 const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Linkedin will stop working after listing 970 jobs
   try {
-    console.log(jobKeyword, jobLocation, maxJobs)
+      console.log(`Keyword: ${jobKeyword}, Location: ${jobLocation}, Rseults: ${maxJobs}`)
       puppeteer.use(StealthPlugin());
 
       const launchOptions = config.linkedin.launchOptions
       const userAgent = config.linkedin.userAgent
       const viewportSize = config.linkedin.viewportSize
+
+      const cmKeyword = jobKeyword.toLowerCase()
+      const cmLocation = jobLocation.toLowerCase()
       
       jobKeyword = encodeURIComponent(jobKeyword.toLowerCase())
       jobLocation =  encodeURIComponent(jobLocation.toLowerCase())
@@ -23,9 +26,9 @@ const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Li
       await page.setUserAgent(userAgent);
       await page.setViewport(viewportSize); 
 
-      console.log('Browser loaded successfully!')
+      console.log('\nBrowser loaded successfully!')
 
-      console.log('Started Scrapping Linkedin!')
+      console.log(`Started Scrapping ${platform}!`)
 
       try {
         const url = `https://in.linkedin.com/jobs/search?keywords=${jobKeyword}&location=${jobLocation}&position=1&pageNum=0`
@@ -107,9 +110,9 @@ const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Li
             const title = await job.$eval('.base-search-card__title', el => el.textContent.trim());
             const company = await job.$eval('.base-search-card__subtitle', el => el.textContent.trim());
             location = await job.$eval('.job-search-card__location', el => el.textContent.trim());
-            // const posted_date = await job.$eval('time[datetime]', el => el.getAttribute('datetime').trim());
             const posted = await job.$eval('time[datetime]', el => el.textContent.trim());
             const url = await job.$eval('a[data-tracking-control-name="public_jobs_jserp-result_search-card"]', el => el.getAttribute('href').trim())
+            const jobId = url.match(/-(\d+)\?/)?.[1];
 
             //location
             if(location.includes('India')) {
@@ -175,8 +178,11 @@ const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Li
             const functions = rawFunction ? rawFunction.replace('Job function\n', '').trim() : '';
             const industries = rawIndustries ? rawIndustries.replace('Industries\n', '').trim() : '';
 
+            const cmId = `CM-L#${jobId}`
+
+
             const jobArrayItem = {
-                platform, title, company, location, salary,
+                cmId, cmKeyword, cmLocation, title, jobId, company, location, salary,
                 posted, status, applicants, seniority, 
                 type, functions, industries, url, description
             }
@@ -186,7 +192,7 @@ const startLinkedin = async ({jobKeyword, jobLocation, maxJobs = 970}) => { //Li
             console.log(`Job No: ${i}`)
 
         }
-        console.log('Scraping Linkedin completed!')
+        console.log(`Scraping ${platform} completed!`)
         await browser.close()
         return jobsArray
 

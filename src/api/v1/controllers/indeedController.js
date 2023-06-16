@@ -1,3 +1,4 @@
+import firestore from '../database/firestore-utils.js'
 import { startIndeed } from "../services/indeedService.js";
 
 const scrapeIndeed = async (req, res) => {
@@ -9,6 +10,8 @@ const scrapeIndeed = async (req, res) => {
       const maxJobs = query.maxjobs;
 
       const rawData = await startIndeed({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
+      const collectionName = 'rawJobs'
+      firestore.addData(collectionName, rawData);
       res.send(rawData)
   } catch (error) {
       res

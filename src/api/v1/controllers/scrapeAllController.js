@@ -17,9 +17,10 @@ const scrapeAll = async (req, res) => {
     const rawLinkedin = await startLinkedin({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
 
     const rawData = [...rawNaukri, ...rawIndeed, ...rawLinkedin];
-    utils.saveJSON(rawData, 'scraped-jobs.json');
-    utils.saveFirestore(collectionName, rawData);
+    // utils.saveJSON(rawData, 'scraped-jobs.json');
+    // utils.saveFirestore(collectionName, rawData);
     res.send(rawData)
+    utils.saveExcel(rawData, 'Scraped-jobs')
   } catch (error) {
       res
         .status(error?.status || 500)

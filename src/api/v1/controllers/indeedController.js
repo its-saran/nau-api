@@ -11,9 +11,10 @@ const scrapeIndeed = async (req, res) => {
       const collectionName = 'rawJobs'
 
       const rawData = await startIndeed({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
-      utils.saveJSON(rawData, 'indeed-jobs.json');
-      utils.saveFirestore(collectionName, rawData);
+      // utils.saveJSON(rawData, 'indeed-jobs.json');
+      // utils.saveFirestore(collectionName, rawData);
       res.send(rawData)
+      utils.saveExcel(rawData, 'Indeed-jobs')
   } catch (error) {
       res
         .status(error?.status || 500)

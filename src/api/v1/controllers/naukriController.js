@@ -12,9 +12,10 @@ const scrapeNaukri = async (req, res) => {
       const collectionName = 'rawJobs'
 
       const rawData = await startNaukri({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
-      utils.saveJSON(rawData, 'naukri-jobs.json');
-      utils.saveFirestore(collectionName, rawData);
+      // utils.saveJSON(rawData, 'naukri-jobs.json');
+      // utils.saveFirestore(collectionName, rawData);
       res.send(rawData)
+      utils.saveExcel(rawData, 'Naukri-jobs')
   } catch (error) {
       res
         .status(error?.status || 500)

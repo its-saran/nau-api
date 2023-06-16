@@ -11,9 +11,10 @@ const scrapeLinkedin = async (req, res) => {
       const collectionName = 'rawJobs'
 
       const rawData = await startLinkedin({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
-      utils.saveJSON(rawData, 'linkedin-jobs.json');
-      utils.saveFirestore(collectionName, rawData);
+      // utils.saveJSON(rawData, 'linkedin-jobs.json');
+      // utils.saveFirestore(collectionName, rawData);
       res.send(rawData)
+      utils.saveExcel(rawData, 'Linkedin-jobs')
   } catch (error) {
       res
         .status(error?.status || 500)

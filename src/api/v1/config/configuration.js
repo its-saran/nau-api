@@ -13,19 +13,33 @@ const config = {
       delay: 1000
   },
   indeed: {
-    launchOptions: { 
-      headless:'new',
-      slowMo:0,
-      args:['--start-maximized', '--disable-infobars', '--no-first-run', '--disable-extensions']
-    },
-    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
-    viewportSize: {
-      width: 1366,
-      height: 661,
-    },
-    noOfResults: 50,
-    delay: 1000
-}
+      launchOptions: { 
+        headless:false,
+        slowMo:0,
+        args:['--start-maximized', '--disable-infobars', '--no-first-run', '--disable-extensions']
+      },
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      viewportSize: {
+        width: 1366,
+        height: 661,
+      },
+      noOfResults: 50,
+      delay: 1000
+  },
+  linkedin: {
+      launchOptions: { 
+        headless:false,
+        slowMo:0,
+        args:['--start-maximized', '--disable-infobars', '--no-first-run', '--disable-extensions']
+      },
+      userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+      viewportSize: {
+        width: 1366,
+        height: 661,
+      },
+      noOfResults: 50,
+      delay: 1000
+  }
 };
 
 export default config;

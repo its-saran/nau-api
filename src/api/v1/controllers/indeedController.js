@@ -6,8 +6,9 @@ const scrapeIndeed = async (req, res) => {
 
       const keyword = query.keyword;
       const location = query.location;
+      const maxJobs = query.maxjobs;
 
-      const rawData = await startIndeed({jobKeyword:keyword, jobLocation:location})
+      const rawData = await startIndeed({jobKeyword:keyword, jobLocation:location, maxJobs:maxJobs})
       res.send(rawData)
   } catch (error) {
       res
